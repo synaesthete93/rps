@@ -7,7 +7,6 @@ package cmd
 import (
 	"os"
 	"fmt"
-	"github.com/synaesthete93/rps/landmarks"
 	"github.com/spf13/cobra"
 )
 
