@@ -59,8 +59,8 @@ func GetLandmarks() (*LandmarkFile, error) {
 	file, err := os.Open(Path())
 	if err != nil {
 		if os.IsNotExist(err) {
-			// Handle the case where the file does not exist
-			return nil, fmt.Errorf("landmarks file does not exist: %w", err)
+			return nil, fmt.Errorf("landmarks file does not exist. Creating now")
+			InitLandmarksFile()
 		}
 		return nil, err
 	}

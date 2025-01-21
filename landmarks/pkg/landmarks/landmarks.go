@@ -1,6 +1,9 @@
 package landmarks
 
-import "os"
+import (
+	"os"
+	"fmt"
+)
 
 type LandmarkFile struct {
 	Landmarks []Landmark
@@ -36,9 +39,10 @@ func InitLandmarks() *LandmarkFile {
 }
 
 func FindLandmark(name string) (*Landmark, error) {
-	landmarks := InitLandmarks()
-
+	landmarks, _ = landmarks.GetLandmarks()
+	fmt.Println(fmt.Sprintf("%s", landmarks)
 	for _, landmark := range landmarks.Landmarks {
+		fmt.Println(landmark.Name)
 		if *landmark.Name == name {
 			return &landmark, nil
 		}

@@ -20,13 +20,13 @@ var rootCmd = &cobra.Command{
 	Long: `Jumps to a user-defined landmark`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) { 
-		landmarkName, _ := cmd.Flags().GetString("landmark")
+	Run: func(cmd *cobra.Command, args []string) {
+		landmarkName:= args[0]
 		if landmarkName == "" {
 			cmd.Help()
 			os.Exit(1)
 		}
-
+		
 		landmark, err := landmarks.FindLandmark(landmarkName)
 
 		if err != nil {
@@ -34,10 +34,10 @@ var rootCmd = &cobra.Command{
 		}
 
 		if landmark == nil {
-			fmt.Sprintf("There is no landmark named '%s'", landmarkName)
-			fmt.Sprintf("You can add it manually in %s", landmarks.Path())
-			fmt.Sprintf("OR")
-			fmt.Sprintf("You can add it with the 'landmarks add' command")
+			fmt.Println(fmt.Sprintf("There is no landmark named '%s'", landmarkName))
+			fmt.Println(fmt.Sprintf("You can add it manually in %s", landmarks.Path()))
+			fmt.Println("OR")
+			fmt.Println("You can add it with the 'landmarks add' command")
 			os.Exit(1)
 		}
 
@@ -55,7 +55,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringP("landmark", "l", "", "Landmark to go to")
+	rootCmd.Args = cobra.MinimumNArgs(1)
 }
 
 
