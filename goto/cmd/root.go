@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"os"
+	"os/exec"
 	"fmt"
 	"github.com/synaesthete93/rps/landmarks/pkg/landmarks"
 	"github.com/spf13/cobra"
@@ -40,8 +41,15 @@ var rootCmd = &cobra.Command{
 			fmt.Println("You can add it with the 'landmarks add' command")
 			os.Exit(1)
 		}
+		targetDir := *landmark.Path
 
-		os.Chdir(*landmark.Path)
+		command := exec.Command(os.Getenv("SHELL"))
+		command.Dir = targetDir
+		command.Stdin = os.Stdin
+		command.Stdout = os.Stdout
+		command.Stderr = os.Stderr
+		
+		command.Run()
 	},
 }
 
