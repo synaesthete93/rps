@@ -6,7 +6,8 @@ package cmd
 
 import (
 	"os"
-
+	"fmt"
+	"github.com/landmarks/pkg/landmarks"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +20,29 @@ var rootCmd = &cobra.Command{
 	Long: `Jumps to a user-defined landmark`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) { 
+		landmarkName, _ := cmd.Flags().GetString("landmark")
+		if landmarkName == "" {
+			cmd.Help()
+			os.Exit(1)
+		}
+
+		landmark, err := landmarks.FindLandmark(landmarkName)
+
+		if err != nil {
+			panic("Could not find landmark: " + err.Error())
+		}
+
+		if landmark == nil {
+			fmt.Sprintf("There is no landmark named '%s'", landmarkName)
+			fmt.Sprintf("You can add it manually in %s", landmarks.Path())
+			fmt.Sprintf("OR")
+			fmt.Sprintf("You can add it with the 'landmarks add' command")
+			os.Exit(1)
+		}
+
+		os.Chdir(*landmark.Path)
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -32,15 +55,7 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.goto.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringP("landmark", "l", "", "Landmark to go to")
 }
 
 

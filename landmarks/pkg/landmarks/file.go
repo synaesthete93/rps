@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -26,6 +27,8 @@ func InitLandmarksFile() {
 		panic("Could not initialize landmarks file: " + err.Error())
 	}
 
+	data = YamlComments(data)
+
 	file, err := os.Create(Path())
 	if err != nil {
 		panic("Could not initialize landmarks file: " + err.Error())
@@ -38,6 +41,18 @@ func InitLandmarksFile() {
 	if err != nil {
 		panic("Could not initialize landmarks file: " + err.Error())
 	}
+}
+
+func YamlComments(original []byte) []byte {
+	originalLines := strings.Split(string(original), "\n")
+	
+	final := []string{"# Landmarks file\n\n"}
+	final = append(final, fmt.Sprintf("%s # Each array element represents a landmark \n", originalLines[0]))
+	final = append(final, fmt.Sprintf("# %s  - this will be used in commands", originalLines[1]))
+	final = append(final, fmt.Sprintf("# %s  - absolute path to landmark", originalLines[2]))
+	final = append(final, fmt.Sprintf("# %s  - landmark type - can be 'dir', 'file' or 'app'. Each type offers different operations \n", originalLines[3]))
+
+	return []byte(strings.Join(final, "\n"))
 }
 
 func GetLandmarks() (*LandmarkFile, error) {

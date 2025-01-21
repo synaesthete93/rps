@@ -35,4 +35,16 @@ func InitLandmarks() *LandmarkFile {
 	}
 }
 
+func FindLandmark(name string) (*Landmark, error) {
+	landmarks := InitLandmarks()
+
+	for _, landmark := range landmarks.Landmarks {
+		if *landmark.Name == name {
+			return &landmark, nil
+		}
+	}
+
+	return nil, nil
+}
+
 //TODO: add validation for LandmarkType
