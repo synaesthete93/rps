@@ -39,10 +39,9 @@ func InitLandmarks() *LandmarkFile {
 }
 
 func FindLandmark(name string) (*Landmark, error) {
-	landmarks, _ = landmarks.GetLandmarks()
-	fmt.Println(fmt.Sprintf("%s", landmarks)
-	for _, landmark := range landmarks.Landmarks {
-		fmt.Println(landmark.Name)
+	lmks, _ := GetLandmarks()
+	for _, landmark := range lmks.Landmarks {
+		fmt.Println(*landmark.Name)
 		if *landmark.Name == name {
 			return &landmark, nil
 		}
