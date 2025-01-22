@@ -2,7 +2,6 @@ package landmarks
 
 import (
 	"os"
-	"fmt"
 )
 
 type LandmarkFile struct {
@@ -41,7 +40,6 @@ func InitLandmarks() *LandmarkFile {
 func FindLandmark(name string) (*Landmark, error) {
 	lmks, _ := GetLandmarks()
 	for _, landmark := range lmks.Landmarks {
-		fmt.Println(*landmark.Name)
 		if *landmark.Name == name {
 			return &landmark, nil
 		}
