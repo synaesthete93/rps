@@ -1,6 +1,7 @@
 package landmarks
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -19,6 +20,15 @@ type LandmarkType string
 const DirType LandmarkType = "dir"
 const FileType LandmarkType = "file"
 const AppType LandmarkType = "app"
+
+func ValidateLandmarkType(landmarkType string) (LandmarkType, error) {
+	switch landmarkType {
+	case string(DirType), string(FileType), string(AppType):
+		return LandmarkType(landmarkType), nil
+	default:
+		return "", fmt.Errorf("invalid landmark type: %s", landmarkType)
+	}
+}
 
 func InitLandmarks() *LandmarkFile {
 	landmarks := make([]Landmark, 1)
@@ -47,5 +57,3 @@ func FindLandmark(name string) (*Landmark, error) {
 
 	return nil, nil
 }
-
-//TODO: add validation for LandmarkType

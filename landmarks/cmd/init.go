@@ -24,7 +24,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		filePath := landmarks.Path()
 		if _, err := os.Stat(filePath); os.IsNotExist(err) {
-			landmarks.InitLandmarksFile()
+			landmarks.InitLandmarksFile(false)
 			return
 		} else if err != nil {
 			fmt.Printf("Error checking file: %v\n", err)
@@ -32,7 +32,7 @@ to quickly create a Cobra application.`,
 		}
 
 		if force, _ := cmd.Flags().GetBool("force"); force {
-			landmarks.InitLandmarksFile()
+			landmarks.InitLandmarksFile(true)
 		} else {
 			fmt.Printf("Landmarks file already exists at %s.\n", filePath)
 			fmt.Println("If you want to overwrite the file, run the command with the --force flag.")

@@ -19,7 +19,7 @@ func Path() string {
 	return home + "/.landmarks.yaml"
 }
 
-func InitLandmarksFile() {
+func InitLandmarksFile(overwrite bool) {
 	landmarks := InitLandmarks()
 
 	data, err := yaml.Marshal(landmarks)
@@ -28,6 +28,36 @@ func InitLandmarksFile() {
 	}
 
 	data = YamlComments(data)
+
+	writeToFile(data, overwrite)
+}
+
+func AddLandmark(newLandmark Landmark) {
+	landmarksFile, err := GetLandmarks()
+	if err != nil {
+		panic("Could not get landmarks: " + err.Error())
+	}
+
+	landmarksFile.Landmarks = append(landmarksFile.Landmarks, newLandmark)
+
+	SaveLandmarks(landmarksFile)
+}
+
+func SaveLandmarks(landmarks *LandmarkFile) {
+	data, err := yaml.Marshal(landmarks)
+	if err != nil {
+		panic("Could not save landmarks file: " + err.Error())
+	}
+
+	writeToFile(data, true)
+}
+
+func writeToFile(data []byte, overwrite bool) {
+	if !overwrite {
+		if _, err := os.Stat(Path()); err == nil {
+			panic("Landmarks file already exists and overwrite is set to false")
+		}
+	}
 
 	file, err := os.Create(Path())
 	if err != nil {
@@ -60,7 +90,7 @@ func GetLandmarks() (*LandmarkFile, error) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, fmt.Errorf("landmarks file does not exist. Creating now")
-			InitLandmarksFile()
+			InitLandmarksFile(false)
 		}
 		return nil, err
 	}
