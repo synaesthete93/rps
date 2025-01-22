@@ -43,6 +43,24 @@ func AddLandmark(newLandmark Landmark) {
 	SaveLandmarks(landmarksFile)
 }
 
+func RemoveLandmark(name string) {
+	landmarksFile, err := GetLandmarks()
+	if err != nil {
+		panic("Could not get landmarks: " + err.Error())
+	}
+
+	var updatedLandmarks []Landmark
+	for _, landmark := range landmarksFile.Landmarks {
+		if *landmark.Name != name {
+			updatedLandmarks = append(updatedLandmarks, landmark)
+		}
+	}
+
+	landmarksFile.Landmarks = updatedLandmarks
+
+	SaveLandmarks(landmarksFile)
+}
+
 func SaveLandmarks(landmarks *LandmarkFile) {
 	data, err := yaml.Marshal(landmarks)
 	if err != nil {
@@ -75,7 +93,7 @@ func writeToFile(data []byte, overwrite bool) {
 
 func YamlComments(original []byte) []byte {
 	originalLines := strings.Split(string(original), "\n")
-	
+
 	final := []string{"# Landmarks file\n\n"}
 	final = append(final, fmt.Sprintf("%s # Each array element represents a landmark \n", originalLines[0]))
 	final = append(final, fmt.Sprintf("# %s  - this will be used in commands", originalLines[1]))
@@ -89,8 +107,8 @@ func GetLandmarks() (*LandmarkFile, error) {
 	file, err := os.Open(Path())
 	if err != nil {
 		if os.IsNotExist(err) {
-			return nil, fmt.Errorf("landmarks file does not exist. Creating now")
 			InitLandmarksFile(false)
+			return nil, fmt.Errorf("landmarks file does not exist. Creating now")
 		}
 		return nil, err
 	}
