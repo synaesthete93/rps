@@ -1,0 +1,2 @@
+ - Fix panic when landmarks list is empty
+ - Figure out goto (the golang version doesn't work - remove it too)
